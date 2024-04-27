@@ -8,17 +8,35 @@ const TasksList = () => import("../pages/tasks/TasksList.vue");
 const routes= [
     {
         path: "/",
-        component: Login
+        name:"login",
+        component: Login,
+        beforeEnter:(to, from, next)=>{
+            //TODO: Secure it more
+            const token = getCookie("auth_token");
+            if(!token){
+                return typeof next === "function" && next();
+            }
+            return typeof next === "function" && next({
+                name : "tasks"
+            })
+        }
     },{
         path:"/register",
+        name:"register",
         component: Register
     },{
         path:"/tasks",
+        name:"tasks",
         component: TasksList,
-        beforeEnter:(to, from)=>{
+        beforeEnter:(to, from, next)=>{
             //TODO: Secure it more
             const token = getCookie("auth_token");
-
+            if(!token){
+                return typeof next === "function" && next({
+                    name : "login"
+                })
+            }
+            typeof next === "function" && next();
         }
     }
 ];
