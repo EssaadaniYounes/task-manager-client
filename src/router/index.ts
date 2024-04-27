@@ -5,6 +5,7 @@ const Login = () => import("../pages/auth/Login.vue");
 const Register = () => import("../pages/auth/Register.vue");
 const TasksList = () => import("../pages/tasks/TasksList.vue");
 const CreateTask = () => import("../pages/tasks/CreateTask.vue");
+const EditTask = () => import("../pages/tasks/EditTask.vue");
 
 const routes= [
     {
@@ -25,6 +26,11 @@ const routes= [
         path:"/tasks/create",
         name:"create-task",
         component: CreateTask,
+        beforeEnter:checkIsNotAuthenticated
+    },{
+        path:"/tasks/:id/edit",
+        name:"edit-task",
+        component: EditTask,
         beforeEnter:checkIsNotAuthenticated
     },
 ];

@@ -18,12 +18,12 @@
       <span>Actions</span>
     </div>
     <div class="bg-gray-200 p-2 rounded-md grid grid-cols-5 " v-for="(task, index) in tasks" :key="task.id">
-      <Task :task="task" />
+      <Task :on-deleted="onDeleted" :task="task" />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getAllTasks } from "../../api/tasks.ts";
 import NavBar from "../../components/layouts/NavBar.vue";
 import Task from "../../components/partials/Task.vue";
@@ -34,6 +34,11 @@ export default {
   data() {
     return {
       tasks: []
+    }
+  },
+  methods:{
+    onDeleted(id :string){
+      this.tasks = this.tasks.filter(t => t.id !== id);
     }
   },
   async mounted() {

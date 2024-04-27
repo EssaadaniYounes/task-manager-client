@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="() => isEditMode ? updateTask() : createNewTask()">
+  <form @submit.prevent="() => isEditMode ? handleUpdateTask() : handleNewTask()">
     <div class="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
       <InputWrapper forInput="title" label="Title">
         <input v-model="taskPayload.title" type="text" name="title" id="title" class="form-input"
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import InputWrapper from "./InputWrapper.vue";
-import {createTask} from "../../api/tasks";
+import {createTask, updateTask} from "../../api/tasks";
 import router from "../../router";
 export default {
   name: "TaskForm",
@@ -50,19 +50,25 @@ export default {
     }
   },
   methods: {
-    async createNewTask() {
+    async handleNewTask() {
       const created = await createTask({...this.taskPayload});
       if(created){
-        router.push("/tasks");
+        router.back();
       }else{
         alert(`Oops! We couldn't created the task`);
       }
     },
-    updateTask() {
-      console.log("Update", { taskpayload: { ...this.taskPayload } })
+    async handleUpdateTask() {
+      const updated = await updateTask({...this.taskPayload}, this.task.id);
+      if(updated){
+        router.back();
+      }else{
+        alert(`Oops! We couldn't update the task`);
+      }
     }
   },
   mounted() {
+    console.log(this.task)
     if (this.isEditMode) {
       this.taskPayload = this.task
     }

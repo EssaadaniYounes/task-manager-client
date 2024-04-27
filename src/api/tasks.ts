@@ -19,6 +19,16 @@ export const getAllTasks = async (
   return tasks;
 };
 
+
+export const getTaskByID = async(taskID: string)=>{
+    const { data } = await axios.get(`/api/tasks/${taskID}`, {
+        headers: {
+            Authorization: getCookie("auth_token"),
+        },
+    });
+    return data.data;
+}
+
 export const createTask = async (payload: {
   title: string;
   description: string;
@@ -33,6 +43,20 @@ export const createTask = async (payload: {
   return status === 201;
 };
 
+export const updateTask = async (payload: {
+    title: string;
+    description: string;
+    due_date: string;
+    status: string;
+}, taskID: string) => {
+    const { status } = await axios.put(`/api/tasks/${taskID}`, payload, {
+        headers: {
+            Authorization: getCookie("auth_token"),
+        },
+    });
+    return status === 200;
+};
+
 export const setTaskCompleted = async (taskID: string) => {
     const { status } = await axios.put(`/api/tasks/${taskID}/mark-completed`,{}, {
         headers: {
@@ -40,4 +64,13 @@ export const setTaskCompleted = async (taskID: string) => {
         },
     });
     return status === 200;
+};
+
+export const deleteTask = async (taskID: string) => {
+    const { data } = await axios.delete(`/api/tasks/${taskID}`, {
+        headers: {
+            Authorization: getCookie("auth_token"),
+        },
+    });
+    return data.success;
 };

@@ -4,7 +4,6 @@
     <h3 class="text-lg md:text-2xl font-semibold text-gray-600">Create new task</h3>
     <div class="p-4 bg-gray-200 rounded-lg">
       <TaskForm :isEditMode="false" :task="{}"/>
-<!--      <TaskForm :isEditMode="true" :task="{title:'HELLOE', description:'ge',due_date:'2023-02-20', status:'pending'}"/>-->
     </div>
   </div>
 </template>
