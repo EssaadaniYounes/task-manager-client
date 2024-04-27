@@ -4,22 +4,14 @@ import {getCookie} from "../lib/utils";
 const Login = () => import("../pages/auth/Login.vue");
 const Register = () => import("../pages/auth/Register.vue");
 const TasksList = () => import("../pages/tasks/TasksList.vue");
+const CreateTask = () => import("../pages/tasks/CreateTask.vue");
 
 const routes= [
     {
         path: "/",
         name:"login",
         component: Login,
-        beforeEnter:(to, from, next)=>{
-            //TODO: Secure it more
-            const token = getCookie("auth_token");
-            if(!token){
-                return typeof next === "function" && next();
-            }
-            return typeof next === "function" && next({
-                name : "tasks"
-            })
-        }
+        beforeEnter: checkIsAuthenticated
     },{
         path:"/register",
         name:"register",
@@ -28,18 +20,36 @@ const routes= [
         path:"/tasks",
         name:"tasks",
         component: TasksList,
-        beforeEnter:(to, from, next)=>{
-            //TODO: Secure it more
-            const token = getCookie("auth_token");
-            if(!token){
-                return typeof next === "function" && next({
-                    name : "login"
-                })
-            }
-            typeof next === "function" && next();
-        }
-    }
+        beforeEnter:checkIsNotAuthenticated
+    },{
+        path:"/tasks/create",
+        name:"create-task",
+        component: CreateTask,
+        beforeEnter:checkIsNotAuthenticated
+    },
 ];
+
+function checkIsNotAuthenticated(to, from , next){
+    //TODO: Secure it more
+    const token = getCookie("auth_token");
+    if(!token){
+        return typeof next === "function" && next({
+            name : "login"
+        })
+    }
+    typeof next === "function" && next();
+}
+
+function checkIsAuthenticated(to, from, next){
+    //TODO: Secure it more
+    const token = getCookie("auth_token");
+    if(!token){
+        return typeof next === "function" && next();
+    }
+    return typeof next === "function" && next({
+        name : "tasks"
+    })
+}
 
 const router = createRouter({
     history:createWebHistory(),

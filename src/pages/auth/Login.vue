@@ -4,29 +4,36 @@
     <RouterLink to="/tasks">Tasks</RouterLink>
     <AuthFormWrapper label="Sign in to your Account">
       <form @submit.prevent="handleLogin" class="space-y-4 md:space-y-6">
-        <div>
-          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+
+        <InputWrapper forInput="email" label="Email" >
           <input v-model="loginPayload.email" type="email" name="email" id="email" class="form-input"
-                 placeholder="yo@gmail.com">
+                  placeholder="yo@gmail.com">
           <span v-for="error in v$.email.$errors" :key="error.$uid">
-            <ErrorIndicator :error="error.$message" />
-          </span>
-        </div>
-        <div>
-          <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+            <ErrorIndicator  :error="error.$message"/>          </span>
+        </InputWrapper>
+
+        <InputWrapper forInput="password" label="Password" >
           <input v-model="loginPayload.password" type="password" name="password" id="password" placeholder="••••••••"
                  class="form-input">
           <span v-for="error in v$.password.$errors" :key="error.$uid">
-            <ErrorIndicator :error="error.$message" />
-          </span>
-        </div>
+            <ErrorIndicator  :error="error.$message"/>          </span>
+        </InputWrapper>
 
-        <button type="submit"
-                class="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign
-          Up</button>
+        <button
+            type="submit"
+            class="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        >
+          Sign In
+        </button>
+
         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-          Don't have an account yet?  <RouterLink to="/register"
-                                              class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign Up</RouterLink>
+          Don't have an account yet?
+          <RouterLink
+              to="/register"
+              class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+          >
+            Sign Up
+          </RouterLink>
         </p>
       </form>
     </AuthFormWrapper>
@@ -77,6 +84,7 @@ import ErrorIndicator from "../../components/partials/ErrorIndicator.vue";
 import axios from "../../lib/axiosConfig";
 import {removeCookie, setCookie} from "../../lib/utils";
 import router from "../../router";
+import InputWrapper from "../../components/partials/InputWrapper.vue";
 
 </script>
 
