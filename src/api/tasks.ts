@@ -7,7 +7,7 @@ export const getAllTasks = async (
 ) => {
   let path = `api/tasks/?due_date=${sort}`;
   if (statusFilter) {
-    path.concat(`&status=${statusFilter}`);
+    path += `&status=${statusFilter}`;
   }
 
   const { data: tasks } = await axios.get(path, {
