@@ -7,6 +7,8 @@
       </InputWrapper>
       <InputWrapper forInput="due_date" label="Due date">
         <input v-model="taskPayload.due_date" type="date" name="due_date" id="due_date" class="form-input" />
+        <span v-for="error in v$.due_date.$errors" :key="error.$uid">
+            <ErrorIndicator  :error="error.$message"/>          </span>
       </InputWrapper>
       <InputWrapper forInput="status" label="Due date">
         <select class="form-input" v-model="taskPayload.status">
@@ -28,52 +30,57 @@
   </form>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import InputWrapper from "./InputWrapper.vue";
 import {createTask, updateTask} from "../../api/tasks";
 import router from "../../router";
-export default {
-  name: "TaskForm",
-  components: { InputWrapper },
-  props: {
-    isEditMode: Boolean,
-    task: Object
-  },
-  data() {
-    return {
-      taskPayload: {
-        title: '',
-        description: '',
-        due_date: '',
-        status: 'pending'
-      }
+import {defineProps, reactive, computed} from "vue";
+import {helpers, minLength, required} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core/dist/index";
+import ErrorIndicator from "./ErrorIndicator.vue";
+
+const {isEditMode, task} = defineProps<{isEditMode:boolean, task?:any}>()
+const taskPayload = reactive({
+  title: task.title || '',
+  description: task.description || '',
+  due_date: task.due_date || '',
+  status: task.status || 'pending'
+})
+const rules = computed(()=>{
+  return {
+    title: {required, minLength: minLength(4)},
+    due_date: {required, minValue: helpers.withMessage('Due date after today', (value:string) => {
+        console.log({value})
+        return new Date(value) > new Date()
+      }),
     }
-  },
-  methods: {
-    async handleNewTask() {
-      const created = await createTask({...this.taskPayload});
-      if(created){
-        router.back();
-      }else{
-        alert(`Oops! We couldn't created the task`);
-      }
-    },
-    async handleUpdateTask() {
-      const updated = await updateTask({...this.taskPayload}, this.task.id);
-      if(updated){
-        router.back();
-      }else{
-        alert(`Oops! We couldn't update the task`);
-      }
-    }
-  },
-  mounted() {
-    console.log(this.task)
-    if (this.isEditMode) {
-      this.taskPayload = this.task
+  }
+});
+
+const v$ = useVuelidate(rules, taskPayload)
+async function handleNewTask() {
+  const validatedForm = await v$.value.$validate();
+  if(validatedForm){
+    const created = await createTask({...taskPayload});
+    if(created){
+      router.back();
+    }else{
+      alert(`Oops! We couldn't created the task`);
     }
   }
 }
+async function handleUpdateTask() {
+  const validatedForm = await v$.value.$validate();
+  if(validatedForm){
+    const updated = await updateTask({...taskPayload}, task.id);
+    if(updated){
+      router.back();
+    }else{
+      alert(`Oops! We couldn't update the task`);
+    }
+  }
+}
+
 </script>
 
 <style scoped></style>
