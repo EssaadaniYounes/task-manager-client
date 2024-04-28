@@ -1,9 +1,48 @@
-# Vue 3 + TypeScript + Vite
+# Task Manager Client
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Requirements
 
-## Recommended Setup
+`Nodejs`
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+`NPM`
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+## Installation & Running the App
+
+Clone the project
+
+```
+git clone https://github.com/EssaadaniYounes/task-manager-client
+```
+
+Install the dependencies
+
+```
+npm install
+```
+
+Run the app in dev
+
+```
+npm run dev
+```
+
+## Roadmap
+
+Visit `http://localhost:5173/`
+
+To Login use one of the next credentials
+
+```
+    - Account 1 :
+        - email : essaadani.yo@gmail.com
+        - password : tasks_password
+
+     - Account 2 :
+        - email : mourabit.a@gmail.com
+        - password : password
+
+```
+
+### Note
+
+To use this accounts you must first setup the API and follow the instructions
