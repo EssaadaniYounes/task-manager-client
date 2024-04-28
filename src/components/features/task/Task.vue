@@ -10,6 +10,9 @@
     <button @click="handleDeleteTask" title="Delete" class="  bg-gray-300 duration-200 hover:bg-gray-200 p-2 rounded-md">
       <img class="w-4 h-4 " src="../../../assets/delete.png" alt="delete">
     </button>
+    <RouterLink :to="{ name: 'view-task', params: { id: task.id }}" title="View" class="  bg-gray-300 duration-200 hover:bg-gray-200 p-2 rounded-md">
+      <img class="w-4 h-4 " src="../../../assets/view.png" alt="View task">
+    </RouterLink>
     <button v-if="task.status!=='completed'" @click="markTaskCompleted" title="Mark done" class="  bg-gray-300 duration-200 hover:bg-gray-200 p-2 rounded-md">
       <img class="w-4 h-4 " src="../../../assets/check.png" alt="view">
     </button>
