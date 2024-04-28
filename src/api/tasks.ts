@@ -49,21 +49,22 @@ export const updateTask = async (payload: {
     due_date: string;
     status: string;
 }, taskID: string) => {
-    const { status } = await axios.put(`/api/tasks/${taskID}`, payload, {
+    const { status, data } = await axios.put(`/api/tasks/${taskID}`, payload, {
         headers: {
             Authorization: getCookie("auth_token"),
         },
     });
-    return status === 200;
+    return {updated: status === 200, message: data.message };
 };
 
 export const setTaskCompleted = async (taskID: string) => {
-    const { status } = await axios.put(`/api/tasks/${taskID}/mark-completed`,{}, {
+    const { data, status } = await axios.put(`/api/tasks/${taskID}/mark-completed`,{}, {
         headers: {
             Authorization: getCookie("auth_token"),
         },
     });
-    return status === 200;
+    return {updated: status === 200, message: data.message}
+
 };
 
 export const deleteTask = async (taskID: string) => {
@@ -72,5 +73,5 @@ export const deleteTask = async (taskID: string) => {
             Authorization: getCookie("auth_token"),
         },
     });
-    return data.success;
+    return {...data};
 };

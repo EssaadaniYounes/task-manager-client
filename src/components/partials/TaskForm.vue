@@ -4,6 +4,8 @@
       <InputWrapper forInput="title" label="Title">
         <input v-model="taskPayload.title" type="text" name="title" id="title" class="form-input"
           placeholder="Learn clerk" />
+        <span v-for="error in v$.title.$errors" :key="error.$uid">
+            <ErrorIndicator  :error="error.$message"/>          </span>
       </InputWrapper>
       <InputWrapper forInput="due_date" label="Due date">
         <input v-model="taskPayload.due_date" type="date" name="due_date" id="due_date" class="form-input" />
@@ -38,6 +40,7 @@ import {defineProps, reactive, computed} from "vue";
 import {helpers, minLength, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core/dist/index";
 import ErrorIndicator from "./ErrorIndicator.vue";
+import {toast} from "vue3-toastify";
 
 const {isEditMode, task} = defineProps<{isEditMode:boolean, task?:any}>()
 const taskPayload = reactive({
@@ -63,20 +66,30 @@ async function handleNewTask() {
   if(validatedForm){
     const created = await createTask({...taskPayload});
     if(created){
+      toast.success(`Task created!`, {
+        position:"top-center"
+      })
       router.back();
     }else{
-      alert(`Oops! We couldn't created the task`);
+      toast.error(`Couldn't created the task!`,{
+        position:"top-center"
+      });
     }
   }
 }
 async function handleUpdateTask() {
   const validatedForm = await v$.value.$validate();
   if(validatedForm){
-    const updated = await updateTask({...taskPayload}, task.id);
+    const {updated, message} = await updateTask({...taskPayload}, task.id);
     if(updated){
+      toast.success(message, {
+        position:"top-center"
+      })
       router.back();
     }else{
-      alert(`Oops! We couldn't update the task`);
+      toast.error(message,{
+        position:"top-center"
+      });
     }
   }
 }

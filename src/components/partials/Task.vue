@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import {deleteTask, setTaskCompleted} from "../../api/tasks";
+import {toast} from "vue3-toastify";
 
 type ITask={
   id:string;
@@ -29,17 +30,24 @@ type ITask={
 const {task, onDeleted} = defineProps<{ task: ITask, onDeleted:(id:string)=>void}>()
 
 async function markTaskCompleted(){
-  const updated = await  setTaskCompleted(task.id);
+  const {updated, message} = await  setTaskCompleted(task.id);
+  console.log(message);
   if(updated){
     task.status = "completed";
   }
+    toast.info(message, {
+      position:"top-center"
+    })
 }
 async function handleDeleteTask(){
   if(confirm(`Are you sure that you want to delete this task?`)){
-    const deleted = await  deleteTask(task.id);
+    const {success: deleted, message} = await  deleteTask(task.id);
     if(deleted){
       onDeleted(task.id);
     }
+    toast.info(message, {
+      position:"top-center"
+    })
   }
 }
 
