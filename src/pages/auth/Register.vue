@@ -29,11 +29,17 @@
         </div>
 
         <button type="submit"
-          class="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign
-          Up</button>
+          class="primary-btn"
+        >
+          SignUp
+        </button>
         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-          Already have an account?<RouterLink to="/"
-            class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</RouterLink>
+          Already have an account?
+          <RouterLink to="/"
+            class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+          >
+            Sign in
+          </RouterLink>
         </p>
       </form>
     </AuthFormWrapper>
@@ -43,9 +49,16 @@
 </template>
 
 <script setup lang="ts">
-import {  reactive, computed } from 'vue'
+import {  reactive } from 'vue'
 import useVuelidate from "@vuelidate/core";
-import {required, minLength, email} from "@vuelidate/validators";
+import {toast} from "vue3-toastify";
+import {AxiosError} from "axios/index";
+import PlatformLogo from "../../components/layouts/PlatformLogo.vue";
+import AuthFormWrapper from "../../components/partials/AuthFormWrapper.vue";
+import ErrorIndicator from "../../components/partials/ErrorIndicator.vue";
+import router from "../../router";
+import {registerRules} from "../../lib/validation-rules";
+import {Register} from "../../api/auth";
 
 const registerPayload = reactive({
   name: "",
@@ -53,37 +66,20 @@ const registerPayload = reactive({
   password: ""
 })
 
-const rules = computed(()=>{
-  return {
-    name: {required, minLength: minLength(3)},
-    email: {required, email},
-    password: {required, minLength:minLength(6)}
-  }
-})
-
-const v$ = useVuelidate(rules, registerPayload)
+const v$ = useVuelidate(registerRules, registerPayload)
 const handleRegister = async()=>{
-  const validatedForm = await v$.value.$validate();
-  if(validatedForm){
-    await axios.get('/sanctum/csrf-cookie');
-    const {data, status}  = await axios.post("/api/auth/register", registerPayload);
-    if(status === 201){
-      await setCookie({
-        name : "auth_token",
-        value: `Bearer ${data.data.auth_token}`
-      });
-      router.push("/tasks");
+  try{
+    const validatedForm = await v$.value.$validate();
+    if(validatedForm){
+      const success = await Register(registerPayload);
+      success ? router.push("/tasks") : toast.error(`Invalid Credentials!`);
+    }
+  }catch (e){
+    if(e instanceof AxiosError){
+      toast.error(`${e.response.data.message}`)
     }
   }
 }
-
-import PlatformLogo from "../../components/layouts/PlatformLogo.vue";
-import AuthFormWrapper from "../../components/partials/AuthFormWrapper.vue";
-import ErrorIndicator from "../../components/partials/ErrorIndicator.vue";
-import axios from "../../lib/axiosConfig";
-import {setCookie} from "../../lib/utils";
-import router from "../../router";
-
 </script>
 
 <style scoped></style>

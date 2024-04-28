@@ -1,4 +1,4 @@
-import axios from "../lib/axiosConfig";
+import axios from "../lib/axios-config";
 import { getCookie } from "../lib/utils";
 
 export const getAllTasks = async (

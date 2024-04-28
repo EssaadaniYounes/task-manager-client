@@ -13,7 +13,7 @@ import {watch, ref} from 'vue'
 import { useRoute } from 'vue-router'
 import {getTaskByID} from "../../api/tasks";
 import NavBar from "../../components/layouts/NavBar.vue";
-import TaskForm from "../../components/partials/TaskForm.vue";
+import TaskForm from "../../components/features/task/TaskForm.vue";
 
 const route = useRoute()
 

@@ -21,7 +21,9 @@
       <span>Due date</span>
       <span>Actions</span>
     </div>
-    <div class="bg-gray-200 p-2 rounded-md grid grid-cols-5 " v-for="(task, index) in paginatedTasks" :key="task.id">
+    <div class="bg-gray-200 p-2 rounded-md grid grid-cols-5 "
+         v-for="(task, index) in paginatedTasks"
+         :key="task.id">
       <Task :on-deleted="onDeleted" :task="task" />
     </div>
     <div class="w-full flex justify-end">
@@ -43,9 +45,9 @@ import {ref, watch} from "vue";
 import {useRoute} from "vue-router";
 
 import NavBar from "../../components/layouts/NavBar.vue";
-import Task from "../../components/partials/Task.vue";
-import SortTasks from "../../components/partials/SortTasks.vue";
-import FilterTasks from "../../components/partials/FilterTasks.vue";
+import Task from "../../components/features/task/Task.vue";
+import SortTasks from "../../components/features/task/SortTasks.vue";
+import FilterTasks from "../../components/features/task/FilterTasks.vue";
 
 import { getAllTasks } from "../../api/tasks.ts";
 
@@ -80,7 +82,7 @@ watch(() => route.query, async function(prop){
 .paginate-buttons {
   height: 35px;
   width: 35px;
-  font-weight: normal;
+  font-size: 12px;
   border-radius: 10px;
   cursor: pointer;
   background-color: #eee;
@@ -97,5 +99,8 @@ watch(() => route.query, async function(prop){
 }
 .active-page:hover {
   background-color: #2988c8;
+}
+.last-page-button, .First{
+  font-size: 12px;
 }
 </style>

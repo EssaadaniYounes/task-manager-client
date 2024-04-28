@@ -11,7 +11,7 @@
 <script setup lang="ts">
 
 import NavBar from "../../components/layouts/NavBar.vue";
-import TaskForm from "../../components/partials/TaskForm.vue";
+import TaskForm from "../../components/features/task/TaskForm.vue";
 </script>
 
 <style scoped></style>

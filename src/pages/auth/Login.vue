@@ -43,48 +43,44 @@
 </template>
 
 <script setup lang="ts">
-import {  reactive, computed } from 'vue'
+import {  reactive } from 'vue'
 import useVuelidate from "@vuelidate/core";
-import {required, minLength, email} from "@vuelidate/validators";
+
+import PlatformLogo from "../../components/layouts/PlatformLogo.vue";
+import AuthFormWrapper from "../../components/partials/AuthFormWrapper.vue";
+import ErrorIndicator from "../../components/partials/ErrorIndicator.vue";
+import InputWrapper from "../../components/partials/InputWrapper.vue";
+
+import axios from "../../lib/axios-config";
+import {removeCookie, setCookie} from "../../lib/utils";
+import router from "../../router";
+import {loginRules} from "../../lib/validation-rules";
+import {Login} from "../../api/auth";
+import {toast} from "vue3-toastify";
+import {AxiosError} from "axios";
 
 const loginPayload = reactive({
   email: "",
   password: ""
 })
 
-const rules = computed(()=>{
-  return {
-    email: {required, email},
-    password: {required, minLength:minLength(6)}
-  }
-})
 
-const v$ = useVuelidate(rules, loginPayload)
+const v$ = useVuelidate(loginRules, loginPayload)
 const handleLogin = async()=>{
-  const validatedForm = await v$.value.$validate();
-  if(validatedForm){
-    const response = await axios.get('/sanctum/csrf-cookie');
-    console.log({response});
-    const {data, status}  = await axios.post("/api/auth/login", loginPayload);
-    console.log(data)
-    if(status === 200){
-      await removeCookie("auth_token");
-      await setCookie({
-        name : "auth_token",
-        value: `Bearer ${data.data.auth_token}`
-      });
-      router.push("/tasks");
+  try{
+    const validatedForm = await v$.value.$validate();
+    if(validatedForm){
+      const success = await Login(loginPayload);
+      success ? router.push("/tasks") : toast.error(`Invalid Credentials!`);
+    }
+  }catch (e){
+    if(e instanceof AxiosError){
+      toast.error(`${e.response.data.message}`)
     }
   }
 }
 
-import PlatformLogo from "../../components/layouts/PlatformLogo.vue";
-import AuthFormWrapper from "../../components/partials/AuthFormWrapper.vue";
-import ErrorIndicator from "../../components/partials/ErrorIndicator.vue";
-import axios from "../../lib/axiosConfig";
-import {removeCookie, setCookie} from "../../lib/utils";
-import router from "../../router";
-import InputWrapper from "../../components/partials/InputWrapper.vue";
+
 
 </script>
 

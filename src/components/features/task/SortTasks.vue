@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import router from "../../router";
+import router from "../../../router";
 import {useRoute} from "vue-router";
 
 const route = useRoute();

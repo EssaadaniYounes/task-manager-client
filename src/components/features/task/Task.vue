@@ -5,19 +5,19 @@
   <span :class="new Date(task.due_date.toString())< Date() ? 'bg-red-400' : 'bg-gray-400'" class="w-[90px] text-sm text-center rounded-lg flex items-center justify-center capitalize text-white">{{ task.due_date }}</span>
   <div class="flex flex-wrap gap-1">
     <RouterLink :to="{ name: 'edit-task', params: { id: task.id }}" title="Update" class="  bg-gray-300 duration-200 hover:bg-gray-200 p-2 rounded-md">
-      <img class="w-4 h-4 " src="../../assets/edit.png" alt="edit">
+      <img class="w-4 h-4 " src="../../../assets/edit.png" alt="edit">
     </RouterLink>
     <button @click="handleDeleteTask" title="Delete" class="  bg-gray-300 duration-200 hover:bg-gray-200 p-2 rounded-md">
-      <img class="w-4 h-4 " src="../../assets/delete.png" alt="delete">
+      <img class="w-4 h-4 " src="../../../assets/delete.png" alt="delete">
     </button>
     <button v-if="task.status!=='completed'" @click="markTaskCompleted" title="Mark done" class="  bg-gray-300 duration-200 hover:bg-gray-200 p-2 rounded-md">
-      <img class="w-4 h-4 " src="../../assets/check.png" alt="view">
+      <img class="w-4 h-4 " src="../../../assets/check.png" alt="view">
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import {deleteTask, setTaskCompleted} from "../../api/tasks";
+import {deleteTask, setTaskCompleted} from "../../../api/tasks";
 import {toast} from "vue3-toastify";
 
 type ITask={
